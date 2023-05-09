@@ -1,13 +1,16 @@
-package net.stellarica.example.velocity
+package net.stellarica.motd
 
 import com.google.inject.Inject
 import com.sksamuel.hoplite.ConfigLoaderBuilder
 import com.sksamuel.hoplite.addFileSource
+import com.velocitypowered.api.event.EventTask
 import com.velocitypowered.api.event.Subscribe
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent
+import com.velocitypowered.api.event.proxy.ProxyPingEvent
 import com.velocitypowered.api.plugin.Plugin
 import com.velocitypowered.api.plugin.annotation.DataDirectory
 import com.velocitypowered.api.proxy.ProxyServer
+import net.kyori.adventure.text.Component
 import org.slf4j.Logger
 import java.nio.file.Files
 import java.nio.file.Path
@@ -16,14 +19,14 @@ import kotlin.io.path.exists
 
 @Suppress("Unused")
 @Plugin(
-	id = "example",
-	name = "ExamplePlugin",
+	id = "yamotdp",
+	name = "Yet Another MOTD Plugin",
 	version = "0.1.0",
-	url = "https://github.com/Stellarica/VelocityPluginTemplate",
-	description = "Plugin? Yes?",
-	authors = ["you"]
+	url = "https://github.com/Stellarica/YetAnotherMotdPlugin",
+	description = "The simplest MOTD plugin",
+	authors = ["trainb0y"]
 )
-class ExamplePlugin @Inject constructor(
+class MotdPlugin @Inject constructor(
 	val server: ProxyServer,
 	val logger: Logger,
 	@DataDirectory val dataDir: Path
@@ -32,11 +35,11 @@ class ExamplePlugin @Inject constructor(
 
 	@Subscribe
 	fun onProxyInit(event: ProxyInitializeEvent) {
-		val configPath = dataDir.resolve("example.conf")
+		val configPath = dataDir.resolve("motd.conf")
 
 		if (!configPath.exists()) {
 			dataDir.createDirectories()
-			Files.copy(this::class.java.getResource("/example.conf")!!.openStream(), configPath)
+			Files.copy(this::class.java.getResource("/motd.conf")!!.openStream(), configPath)
 		}
 
 		config = ConfigLoaderBuilder.empty()
@@ -45,5 +48,12 @@ class ExamplePlugin @Inject constructor(
 			.addFileSource(configPath.toFile())
 			.build()
 			.loadConfigOrThrow<Config>()
+	}
+
+	@Subscribe
+	fun onGiveMOTD(event: ProxyPingEvent) = EventTask.async {
+		event.ping = event.ping.asBuilder()
+			.description(Component.text("OH HI"))
+			.build()
 	}
 }

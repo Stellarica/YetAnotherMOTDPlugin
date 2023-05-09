@@ -1,4 +1,4 @@
-rootProject.name = "ExamplePlugin"
+rootProject.name = "YetAnotherMOTDPlugin"
 pluginManagement {
 	repositories {
 		mavenCentral()

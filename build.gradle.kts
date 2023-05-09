@@ -14,6 +14,9 @@ repositories {
 dependencies {
     implementation("com.sksamuel.hoplite:hoplite-core:${property("hoplite_version")}")
     implementation("com.sksamuel.hoplite:hoplite-hocon:${property("hoplite_version")}")
+
+    implementation("net.kyori:adventure-text-minimessage:${property("minimessage_version")}")
+
     compileOnly("com.velocitypowered:velocity-api:${property("velocity_version")}")
     kapt("com.velocitypowered:velocity-api:${property("velocity_version")}")
 }
